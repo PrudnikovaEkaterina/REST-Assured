@@ -1,6 +1,8 @@
 package ru.prudnikova;
 
+import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +14,17 @@ import static io.restassured.RestAssured.given;
 
 public class ReqresTest {
 
+    @BeforeEach
+    public void before() {
+        RestAssured.baseURI = "https://reqres.in/api";
+    }
+
     @Test
     @Tag("Api")
     void checkUserWithsId7() {
         given()
                 .when()
-                .get("https://reqres.in/api/users?page=2")
+                .get("/users?page=2")
                 .then()
                 .log().status()
                 .log().body()
@@ -39,7 +46,7 @@ public class ReqresTest {
         given()
                 .log().uri()
                 .when()
-                .get("https://reqres.in/api/unknown/23")
+                .get("/unknown/23")
                 .then()
                 .log().status()
                 .log().body()
@@ -56,7 +63,7 @@ public class ReqresTest {
                 .body(body)
                 .contentType(JSON)
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -74,7 +81,7 @@ public class ReqresTest {
                 .body(body)
                 .contentType(JSON)
                 .when()
-                .put("https://reqres.in/api/users/2")
+                .put("/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -89,7 +96,7 @@ public class ReqresTest {
         given()
                 .log().all()
                 .when()
-                .delete("https://reqres.in/api/users/2")
+                .delete("/users/2")
                 .then()
                 .log().status()
                 .log().body()
