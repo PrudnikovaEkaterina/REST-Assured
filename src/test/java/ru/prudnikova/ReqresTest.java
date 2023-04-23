@@ -68,8 +68,7 @@ public class ReqresTest {
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .body("name", is("morpheus"))
-                .body("job", is("leader"));
+                .body("name", is("morpheus"),"job", is("leader"));
     }
 
     @Test
@@ -86,8 +85,7 @@ public class ReqresTest {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("name", is("kate"))
-                .body("job", is("qa"));
+                .body("name", is("kate"),"job", is("qa"));
     }
 
     @Test
