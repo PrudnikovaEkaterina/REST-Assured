@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.http.ContentType.JSON;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
 import static io.restassured.RestAssured.given;
@@ -31,7 +32,7 @@ public class ReqresTest {
                 .statusCode(200)
                 .body("page", is(2))
                 .body("per_page", is(6))
-                .body("data[0].id", is(7))
+                .body("data.id", hasItems(7, 8, 9, 10, 11, 12))
                 .body("data[0].email", is("michael.lawson@reqres.in"))
                 .body("data[0].first_name", is("Michael"))
                 .body("data[0].last_name", is("Lawson"))
