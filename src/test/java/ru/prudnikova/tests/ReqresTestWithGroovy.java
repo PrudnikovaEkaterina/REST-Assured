@@ -1,58 +1,51 @@
-package ru.prudnikova;
+package ru.prudnikova.tests;
 
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.http.ContentType.JSON;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
-
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItems;
+import static ru.prudnikova.specs.Specs.*;
 
-public class ReqresTest {
-
-    @BeforeEach
-    public void before() {
-        RestAssured.baseURI = "https://reqres.in/api";
-    }
+public class ReqresTestWithGroovy {
 
     @Test
     @Tag("Api")
     void checkUserWithsId7() {
         given()
+                .spec(requestSpec)
                 .when()
                 .get("/users?page=2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(responseSpec200)
                 .body("page", is(2))
                 .body("per_page", is(6))
-                .body("data.id", hasItems(7, 8, 9, 10, 11, 12))
-                .body("data[0].email", is("michael.lawson@reqres.in"))
-                .body("data[0].first_name", is("Michael"))
-                .body("data[0].last_name", is("Lawson"))
-                .body("data[0].avatar", is("https://reqres.in/img/faces/7-image.jpg"))
+                .body("data.id.flatten()", hasItems(7, 8, 9, 10, 11, 12))
+                .body("data.findAll{it.id>11}.id.flatten()", hasItems(12))
+                .body("data.id.flatten().first()", is (7))
+                .body("data.id.flatten().getAt(2)", is (9))
+                .body("data.email.flatten()", hasItems ("michael.lawson@reqres.in", "lindsay.ferguson@reqres.in", "tobias.funke@reqres.in",
+                        "byron.fields@reqres.in", "george.edwards@reqres.in", "rachel.howell@reqres.in"))
+                .body("data.email.flatten().", everyItem(endsWith("@reqres.in")))
+                .body("data.first_name.flatten().", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"))
+                .body("data.last_name.flatten().", hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell"))
+                .body("data.avatar.flatten().", hasItem("https://reqres.in/img/faces/7-image.jpg"))
                 .body(matchesJsonSchemaInClasspath("usersListResponseSchema.json"));
-
     }
 
     @Test
     @Tag("Api")
     void checkSingleResourceNotFound() {
         given()
-                .log().uri()
+                .spec(requestSpec)
                 .when()
                 .get("/unknown/23")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(404);
-
     }
 
     @Test
@@ -60,14 +53,12 @@ public class ReqresTest {
     void createUser() {
         String body = "{ \"name\": \"morpheus\", \"job\": \"leader\" }";
         given()
-                .log().all()
+                .spec(requestSpec)
                 .body(body)
-                .contentType(JSON)
                 .when()
                 .post("/users")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(201)
                 .body("name", is("morpheus"),"job", is("leader"));
     }
@@ -77,15 +68,12 @@ public class ReqresTest {
     void updateUser2() {
         String body = "{ \"name\": \"kate\", \"job\": \"qa\" }";
         given()
-                .log().all()
+                .spec(requestSpec)
                 .body(body)
-                .contentType(JSON)
                 .when()
                 .put("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(responseSpec200)
                 .body("name", is("kate"),"job", is("qa"));
     }
 
@@ -93,12 +81,11 @@ public class ReqresTest {
     @Tag("Api")
     void deleteUser2() {
         given()
-                .log().all()
+                .spec(requestSpec)
                 .when()
                 .delete("/users/2")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(204)
                 .body(Matchers.anything());
 
