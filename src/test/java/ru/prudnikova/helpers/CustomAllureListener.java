@@ -1,4 +1,4 @@
-package ru.prudnikova.generators.helpers;
+package ru.prudnikova.helpers;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 

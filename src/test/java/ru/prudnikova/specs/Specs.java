@@ -8,7 +8,7 @@ import io.restassured.specification.ResponseSpecification;
 import static io.restassured.RestAssured.with;
 import static io.restassured.filter.log.LogDetail.BODY;
 import static io.restassured.filter.log.LogDetail.STATUS;
-import static ru.prudnikova.generators.helpers.CustomAllureListener.withCustomTemplates;
+import static ru.prudnikova.helpers.CustomAllureListener.withCustomTemplates;
 
 public class Specs {
     public static RequestSpecification requestSpec = with()
