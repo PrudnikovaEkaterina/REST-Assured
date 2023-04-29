@@ -32,7 +32,7 @@ public class ReqresTestWithGroovy {
                 .body("data.first_name.flatten().", hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"))
                 .body("data.last_name.flatten().", hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell"))
                 .body("data.avatar.flatten().", hasItem("https://reqres.in/img/faces/7-image.jpg"))
-                .body(matchesJsonSchemaInClasspath("usersListResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("shemes/usersListResponseSchema.json"));
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static ru.prudnikova.generators.helpers.CustomAllureListener.withCustomTemplates;
 import static ru.prudnikova.specs.Specs.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
