@@ -21,7 +21,7 @@ public class Specs {
             .log(BODY)
             .expectStatusCode(200).build();
 
-    public static ResponseSpecification responseSpec= new ResponseSpecBuilder()
+    public static ResponseSpecification responseSpec = new ResponseSpecBuilder()
             .log(STATUS)
             .log(BODY)
             .build();

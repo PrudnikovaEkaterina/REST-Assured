@@ -1,32 +1,37 @@
 package ru.prudnikova.tests;
 
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import ru.prudnikova.generators.CreateUserModelGenerator;
+import ru.prudnikova.models.CreateUserModel;
 import ru.prudnikova.models.User;
 import ru.prudnikova.models.UserData;
 
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 import static ru.prudnikova.specs.Specs.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ReqresTestWithModel {
 
     @Test
     @Tag("Api")
-    void checkUserWithsId7() {
-      UserData data = given()
+    void getUserDataFromPage2() {
+        UserData data = given()
                 .spec(requestSpec)
                 .when()
                 .get("/users?page=2")
                 .then()
                 .spec(responseSpec200).extract().as(UserData.class);
+        assertThat(data.getUser().stream().map(el -> el.getId()).collect(Collectors.toList()), hasItems(7, 8, 9, 10, 11, 12));
+        assertThat(data.getUser().stream().map(User::getEmail).collect(Collectors.toList()), everyItem(endsWith("@reqres.in")));
+        assertThat(data.getUser().stream().map(User::getFirstName).collect(Collectors.toList()), hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"));
+        assertThat(data.getUser().stream().map(User::getLastName).collect(Collectors.toList()), hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell"));
+        assertThat(data.getUser().stream().map(User::getAvatar).collect(Collectors.toList()), hasItem("https://reqres.in/img/faces/7-image.jpg"));
 
-        int [] mas = data.getUser().stream().map(el->el.getId()).collect(Arrays.toString());
     }
 
     @Test
@@ -44,30 +49,30 @@ public class ReqresTestWithModel {
     @Test
     @Tag("Api")
     void createUser() {
-        String body = "{ \"name\": \"morpheus\", \"job\": \"leader\" }";
+        CreateUserModel userModel = CreateUserModelGenerator.generationUserCreateBody();
         given()
                 .spec(requestSpec)
-                .body(body)
+                .body(userModel)
                 .when()
                 .post("/users")
                 .then()
                 .spec(responseSpec)
                 .statusCode(201)
-                .body("name", is("morpheus"),"job", is("leader"));
+                .body("name", is(userModel.getFullName()), "job", is(userModel.getJob()));
     }
 
     @Test
     @Tag("Api")
-    void updateUser2() {
-        String body = "{ \"name\": \"kate\", \"job\": \"qa\" }";
+    void updateUserId2() {
+        CreateUserModel userModel = CreateUserModelGenerator.generationUserCreateBody();
         given()
                 .spec(requestSpec)
-                .body(body)
+                .body(userModel)
                 .when()
                 .put("/users/2")
                 .then()
                 .spec(responseSpec200)
-                .body("name", is("kate"),"job", is("qa"));
+                .body("name", is(userModel.getFullName()), "job", is(userModel.getJob()));
     }
 
     @Test
