@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ReqresTestWithModel {
 
     @Test
-    @Tag("Api")
+    @Tag("ApiTest")
     void getUserData() {
         UserData data = step("Make request to get list of users from page 2", () -> given()
                 .spec(requestSpec)
@@ -40,7 +40,7 @@ public class ReqresTestWithModel {
     }
 
     @Test
-    @Tag("Api")
+    @Tag("ApiTest")
     void getUnknownUser() {
         step("Make request to to get unknown user", () -> given()
                 .spec(requestSpec)
@@ -52,7 +52,7 @@ public class ReqresTestWithModel {
     }
 
     @Test
-    @Tag("Api")
+    @Tag("ApiTest")
     void createUser() {
         CreateUserModel body = CreateUserModelGenerator.generationUserCreateBody();
         CreateUserModel user = step("Make request to create user", () -> given()
@@ -70,7 +70,7 @@ public class ReqresTestWithModel {
     }
 
     @Test
-    @Tag("Api")
+    @Tag("ApiTest")
     void updateUserId2() {
         CreateUserModel body = CreateUserModelGenerator.generationUserCreateBody();
         CreateUserModel user = step("Make request to update user", () -> given()
@@ -87,7 +87,7 @@ public class ReqresTestWithModel {
     }
 
     @Test
-    @Tag("Api")
+    @Tag("ApiTest")
     void deleteUser() {
         step("Make request to to delete user with id 2", () -> given()
                 .spec(requestSpec)
