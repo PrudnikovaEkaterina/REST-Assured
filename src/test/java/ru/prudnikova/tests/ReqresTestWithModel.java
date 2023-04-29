@@ -10,6 +10,7 @@ import ru.prudnikova.models.UserData;
 
 import java.util.stream.Collectors;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static ru.prudnikova.generators.helpers.CustomAllureListener.withCustomTemplates;
@@ -21,17 +22,22 @@ public class ReqresTestWithModel {
     @Test
     @Tag("Api")
     void getUserDataFromPage2() {
-        UserData data = given()
+        UserData data = step("Make request", () ->given()
                 .spec(requestSpec)
                 .when()
                 .get("/users?page=2")
                 .then()
-                .spec(responseSpec200).extract().as(UserData.class);
-        assertThat(data.getUser().stream().map(el -> el.getId()).collect(Collectors.toList()), hasItems(7, 8, 9, 10, 11, 12));
-        assertThat(data.getUser().stream().map(User::getEmail).collect(Collectors.toList()), everyItem(endsWith("@reqres.in")));
-        assertThat(data.getUser().stream().map(User::getFirstName).collect(Collectors.toList()), hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel"));
-        assertThat(data.getUser().stream().map(User::getLastName).collect(Collectors.toList()), hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell"));
-        assertThat(data.getUser().stream().map(User::getAvatar).collect(Collectors.toList()), hasItem("https://reqres.in/img/faces/7-image.jpg"));
+                .spec(responseSpec200).extract().as(UserData.class));
+        step("Verify id", () ->
+        assertThat(data.getUser().stream().map(el -> el.getId()).collect(Collectors.toList()), hasItems(7, 8, 9, 10, 11, 12)));
+        step("Verify email", () ->
+        assertThat(data.getUser().stream().map(User::getEmail).collect(Collectors.toList()), everyItem(endsWith("@reqres.in"))));
+        step("Verify firstName", () ->
+        assertThat(data.getUser().stream().map(User::getFirstName).collect(Collectors.toList()), hasItems("Michael", "Lindsay", "Tobias", "Byron", "George", "Rachel")));
+        step("Verify lastName", () ->
+        assertThat(data.getUser().stream().map(User::getLastName).collect(Collectors.toList()), hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell")));
+        step("Verify avatar", () ->
+        assertThat(data.getUser().stream().map(User::getAvatar).collect(Collectors.toList()), hasItem("https://reqres.in/img/faces/7-image.jpg")));
 
     }
 
