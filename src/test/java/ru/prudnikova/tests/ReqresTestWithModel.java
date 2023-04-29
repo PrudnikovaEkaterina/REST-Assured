@@ -38,7 +38,6 @@ public class ReqresTestWithModel {
         assertThat(data.getUser().stream().map(User::getLastName).collect(Collectors.toList()), hasItems("Lawson", "Ferguson", "Funke", "Fields", "Edwards", "Howell")));
         step("Verify avatar", () ->
         assertThat(data.getUser().stream().map(User::getAvatar).collect(Collectors.toList()), hasItem("https://reqres.in/img/faces/7-image.jpg")));
-
     }
 
     @Test
