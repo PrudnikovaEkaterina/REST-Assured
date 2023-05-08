@@ -35,7 +35,8 @@ dependencies {
             'org.slf4j:slf4j-simple:2.0.7',
             'com.github.javafaker:javafaker:1.0.2',
             "io.qameta.allure:allure-rest-assured:$allureVersion",
-            "org.assertj:assertj-core:3.24.2"
+            "org.assertj:assertj-core:3.24.2",
+            'com.codeborne:selenide-proxy:6.13.1'
     )
 }
 
